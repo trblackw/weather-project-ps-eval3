@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <!-- Latest compiled and minified CSS -->
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <h3 class="display-4 text-center mt-3">Weather Bug</h3>
+      <div
+        class="container justify-content-center p-5 mx-auto my-5 rounded drop-shadow bg-warning text-dark"
+      >
+        <div class="input-group mb-3">
+          <input
+            type="text"
+            class="form-control shadow"
+            placeholder="City"
+            aria-label="City"
+          />
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button" id="search">
+              Search
+            </button>
+          </div>
+        </div>
+      </div>
+      <div id="weather-data"></div>
+    </div>
+
+    <script id="weather-template" type="text/x-handlebars-template">
+      <div>
+         <h1 class="display-4">Displaying weather for {{city}}</h1>
+         <ul>
+            {{#if main}}
+               <li>Temperature: {{main.temp}}</li>
+               <li>Pressure: {{main.pressure}}</li>
+               <li>Humidity: {{main.humidity}}</li>
+            {{/if}}
+         </ul>
+
+      </div>
+    </script>
+
+    <script src="handlebars.js"></script>
+
+    <script src="main.js"></script>
+  </body>
+</html>
