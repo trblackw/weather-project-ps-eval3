@@ -9,6 +9,68 @@ body {
   color: whitesmoke;
 }
 
+div#weather-data {
+  margin: 1.5em auto;
+  background: whitesmoke;
+  padding: 1.5em;
+  display: none;
+  color: black;
+  border-radius: 5px;
+}
+
+div#weather-header {
+  margin: 1em auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  padding: 0;
+  text-align: center;
+  align-content: center;
+}
+
+div#weather-header p {
+  color: lightskyblue;
+  display: block;
+  font-size: 2em;
+}
+
+ul#weather-details {
+  background: lightslategray;
+  padding: 1em;
+  border: 1px solid black;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+}
+
+ul#weather-details li {
+  margin: 1em;
+}
+
+img#weather-icon {
+  height: 85px;
+  width: auto;
+  object-fit: cover;
+}
+
+#weather-data ul {
+  list-style: none;
+}
+
+button#search {
+  color: black;
+  border: 1px solid black;
+  background: transparent;
+}
+
+button#search:hover {
+  color: whitesmoke;
+  border: 1px solid black;
+  background: black;
+}
+
 .shadow {
   position: relative;
   -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3),

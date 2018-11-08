@@ -28,9 +28,7 @@
             aria-label="City"
           />
           <div class="input-group-append">
-            <button class="btn btn-outline-secondary" type="button" id="search">
-              Search
-            </button>
+            <button class="btn" type="button" id="search">Search</button>
           </div>
         </div>
       </div>
@@ -39,13 +37,23 @@
 
     <script id="weather-template" type="text/x-handlebars-template">
       <div>
-         <h1 class="display-4">Displaying weather for {{city}}</h1>
-         <ul>
-            {{#if main}}
-               <li>Temperature: {{main.temp}}</li>
-               <li>Pressure: {{main.pressure}}</li>
-               <li>Humidity: {{main.humidity}}</li>
+         <h1 class="display-4 text-center">Displaying weather for {{city}}</h1>
+         <hr/>
+         <div id="weather-header">
+            {{#if weather}}
+               {{#each weather}}
+                  <img src="http://openweathermap.org/img/w/{{this.icon}}.png" alt="icon" id="weather-icon">
+            <p>{{this.description}}</p>
+               {{/each}}
             {{/if}}
+         </div>
+         <ul id="weather-details" class="drop-shadow">
+            <li><strong>Temperature: </strong> {{main.temp}}℉</li>
+            <li><strong>Pressure: </strong> {{main.pressure}}</li>
+            <li><strong>Humidity: </strong>{{main.humidity}}%</li>
+            <li><strong>Wind Speed: </strong>{{wind.speed}} mph</li>
+            <li><strong>Sunrise: </strong>{{formatTime time.sunrise}} am</li>
+            <li><strong>Sunset: </strong>{{formatTime time.sunset}} pm</li>
          </ul>
 
       </div>
