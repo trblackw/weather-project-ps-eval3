@@ -1,34 +1,78 @@
 const API_KEY = "dc9c662a1bda3caf8b7c91b83968d8db";
 const searchBtn = document.querySelector("button#search");
 const citySearchInput = document.querySelector("input[aria-label=City");
+const currentLocationBtn = document.querySelector("#current-location");
 
-const searchByCity = async city => {
-  const cityWeatherRes = await fetch(
-    `https://api.openweathermap.org/data/2.5/weather?q=${city.toLowerCase()}&units=imperial&APPID=${API_KEY}`
-  );
-  const cityData = await cityWeatherRes.json();
-  const { weather, coord, main, wind, sys: time } = cityData;
-
-  const weatherObj = {
-    city,
-    weather,
-    coord,
-    main,
-    wind,
-    time
-  };
-  console.log(weatherObj);
+const generateHTML = data => {
   const source = document.querySelector("#weather-template").innerHTML;
-
   const template = Handlebars.compile(source);
-  const HTML = template(weatherObj);
+  const HTML = template(data);
   const weatherUI = document.querySelector("#weather-data");
   weatherUI.style.display = "inherit";
   weatherUI.innerHTML = HTML;
 };
 
+const searchByCity = async city => {
+  const currentWeatherURL = `https://api.openweathermap.org/data/2.5/weather?q=${city.toLowerCase()}&units=imperial&APPID=${API_KEY}`;
+  const forecastURL = `https://api.openweathermap.org/data/2.5/forecast?q=${city.toLowerCase()},us&units=imperial&APPID=${API_KEY}`;
+
+  const weatherData = await Promise.all(
+    [currentWeatherURL, forecastURL].map(url => fetch(url))
+  ).then(responses => Promise.all(responses.map(res => res.json())));
+
+  const [currentWeather, forecast] = weatherData;
+  const { weather, coord, main, wind, sys: time } = currentWeather;
+
+  const weatherObj = {
+    currentWeather: [{ city }, weather, coord, main, wind, time],
+    forecast
+  };
+  console.log(weatherObj);
+  generateHTML(weatherObj);
+};
+
+const searchCurrentLocation = async (lat, lon) => {
+  const currentWeatherURL = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=imperial&APPID=${API_KEY}`;
+  const forecastURL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=imperial&APPID=${API_KEY}`;
+
+  const weatherData = await Promise.all(
+    [currentWeatherURL, forecastURL].map(url => fetch(url))
+  ).then(responses => Promise.all(responses.map(res => res.json())));
+
+  const [currentWeather, forecast] = weatherData;
+  const { weather, coord, main, wind, sys: time } = currentWeather;
+
+  const weatherObj = {
+    currentWeather: [
+      { city: forecast.city.name },
+      weather,
+      coord,
+      main,
+      wind,
+      time
+    ],
+    forecast
+  };
+  citySearchInput.value = forecast.city.name;
+  console.log(weatherObj);
+  generateHTML(weatherObj);
+};
+
 searchBtn.addEventListener("click", () => {
   searchByCity(citySearchInput.value);
+});
+
+currentLocationBtn.addEventListener("click", () => {
+  if ("geolocation" in navigator) {
+    searchBtn.disabled = true;
+    navigator.geolocation.getCurrentPosition(position => {
+      const lat = position.coords.latitude;
+      const lon = position.coords.longitude;
+      searchCurrentLocation(lat, lon);
+    });
+  } else {
+    alert("please allow location services to use this functionality");
+  }
 });
 
 //timeformatter snagged (and modified) from Stack Overflow
@@ -46,3 +90,11 @@ Handlebars.registerHelper("formatTime", timeStamp => {
   const formattedTime = `${hours}:${minutes.substr(-1)}:${seconds.substr(-2)}`;
   return formattedTime;
 });
+
+const testCall = () => {
+  fetch(
+    `https://api.openweathermap.org/data/2.5/forecast?q=London,us&APPID=${API_KEY}`
+  );
+};
+
+console.log(testCall());
