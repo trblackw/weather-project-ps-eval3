@@ -65,10 +65,13 @@ searchBtn.addEventListener("click", () => {
 currentLocationBtn.addEventListener("click", () => {
   if ("geolocation" in navigator) {
     searchBtn.disabled = true;
+    currentLocationBtn.innerText = "Getting location...";
     navigator.geolocation.getCurrentPosition(position => {
       const lat = position.coords.latitude;
       const lon = position.coords.longitude;
       searchCurrentLocation(lat, lon);
+      searchBtn.disabled = false;
+      currentLocationBtn.innerText = "Your current location";
     });
   } else {
     alert("please allow location services to use this functionality");
@@ -90,11 +93,3 @@ Handlebars.registerHelper("formatTime", timeStamp => {
   const formattedTime = `${hours}:${minutes.substr(-1)}:${seconds.substr(-2)}`;
   return formattedTime;
 });
-
-const testCall = () => {
-  fetch(
-    `https://api.openweathermap.org/data/2.5/forecast?q=London,us&APPID=${API_KEY}`
-  );
-};
-
-console.log(testCall());
