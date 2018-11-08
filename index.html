@@ -18,7 +18,7 @@
     <div class="container-fluid">
       <h3 class="display-4 text-center mt-3">Weather Bug</h3>
       <div
-        class="container justify-content-center p-5 mx-auto my-5 rounded drop-shadow bg-warning text-dark"
+        class="container justify-content-center p-5 mx-auto my-5 rounded drop-shadow bg-warning text-dark text-center"
       >
         <div class="input-group mb-3">
           <input
@@ -31,36 +31,38 @@
             <button class="btn" type="button" id="search">Search</button>
           </div>
         </div>
+        <button class="btn btn-dark m-auto" id="current-location">
+          Your current location
+        </button>
       </div>
       <div id="weather-data"></div>
     </div>
 
     <script id="weather-template" type="text/x-handlebars-template">
-      <div>
-         <h1 class="display-4 text-center">Displaying weather for {{city}}</h1>
+      <div id="main-weather-container">
+         <h1 class="display-4 text-center">Displaying weather for {{currentWeather.[0].city}}</h1>
          <hr/>
-         <div id="weather-header">
-            {{#if weather}}
-               {{#each weather}}
-                  <img src="http://openweathermap.org/img/w/{{this.icon}}.png" alt="icon" id="weather-icon">
-            <p>{{this.description}}</p>
-               {{/each}}
-            {{/if}}
+         <div id="current-weather-header">
+                  <img src="http://openweathermap.org/img/w/{{currentWeather.[1].[0].icon}}.png" alt="icon" id="weather-icon">
+            <p>{{currentWeather.[1].[0].description}}</p>
          </div>
-         <ul id="weather-details" class="drop-shadow">
-            <li><strong>Temperature: </strong> {{main.temp}}℉</li>
-            <li><strong>Pressure: </strong> {{main.pressure}}</li>
-            <li><strong>Humidity: </strong>{{main.humidity}}%</li>
-            <li><strong>Wind Speed: </strong>{{wind.speed}} mph</li>
-            <li><strong>Sunrise: </strong>{{formatTime time.sunrise}} am</li>
-            <li><strong>Sunset: </strong>{{formatTime time.sunset}} pm</li>
+         <ul id="current-weather-details" class="drop-shadow">
+            <li><strong>Temperature: </strong> {{currentWeather.[3].temp}}℉</li>
+            <li><strong>Pressure: </strong> {{currentWeather.[3].pressure}}</li>
+            <li><strong>Humidity: </strong>{{currentWeather.[3].humidity}}%</li>
+            <li><strong>Wind Speed: </strong>{{currentWeather.[3].speed}} mph</li>
+            <li><strong>Sunrise: </strong>{{formatTime currentWeather.[5].sunrise}} am</li>
+            <li><strong>Sunset: </strong>{{formatTime currentWeather.[5].sunset}} pm</li>
          </ul>
+         <button class="btn btn-lg btn-info btn-block">See 5 day forecast</button>
+         <div id="weather-forecast">
+            
 
+         </div>
       </div>
     </script>
 
     <script src="handlebars.js"></script>
-
     <script src="main.js"></script>
   </body>
 </html>
