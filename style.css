@@ -9,6 +9,8 @@ body {
   color: whitesmoke;
 }
 
+
+
 div#weather-data {
   margin: 1.5em auto;
   background: whitesmoke;
@@ -29,13 +31,12 @@ div#current-weather-header {
 }
 
 div#current-weather-header p {
-  color: lightskyblue;
   display: block;
   font-size: 2em;
 }
 
 ul#current-weather-details {
-  background: lightslategray;
+  background: hsl(57, 17%, 75%);
   padding: 1em;
   border: 1px solid black;
   border-radius: 5px;
@@ -75,6 +76,23 @@ div#weather-forecast {
   display: flex;
   flex-direction: row;
   justify-content: center;
+  display: none;
+}
+
+ul#weather-forcast-outer-ul,
+ul#weather-forecast-details {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  list-style: none;
+}
+
+div#weather-forecast-data {
+  margin: 1.5em auto;
+  padding: 1em;
+  background: hsl(0, 0%, 13%);
+  color: whitesmoke;
+  border-radius: 5px;
 }
 
 .shadow {
