@@ -10,9 +10,20 @@ const generateHTML = data => {
   const weatherUI = document.querySelector("#weather-data");
   weatherUI.style.display = "inherit";
   weatherUI.innerHTML = HTML;
+  const toggleForecast = document.querySelector("button#toggle-forecast");
+  toggleForecast.addEventListener("click", () => {
+    const forecastData = document.querySelector("div#weather-forecast");
+    return !forecastData.style.display
+      ? (forecastData.style.display = "inherit")
+      : (forecastData.style.display = "none");
+  });
 };
 
 const searchByCity = async city => {
+  if (citySearchInput.value === "") {
+    alert("please enter a city");
+    return;
+  }
   const currentWeatherURL = `https://api.openweathermap.org/data/2.5/weather?q=${city.toLowerCase()}&units=imperial&APPID=${API_KEY}`;
   const forecastURL = `https://api.openweathermap.org/data/2.5/forecast?q=${city.toLowerCase()},us&units=imperial&APPID=${API_KEY}`;
 
@@ -21,11 +32,20 @@ const searchByCity = async city => {
   ).then(responses => Promise.all(responses.map(res => res.json())));
 
   const [currentWeather, forecast] = weatherData;
-  const { weather, coord, main, wind, sys: time } = currentWeather;
+  const { weather, main: temperature, wind, sys: time } = currentWeather;
+  const { list } = forecast;
+  const { name, id } = forecast.city;
+
+  const [weatherDescription] = weather;
+  //   const formattedTimes = list.map(forecast => format(forecast.dt)).filter(time => String(time.split(":")[0]))
 
   const weatherObj = {
-    currentWeather: [{ city }, weather, coord, main, wind, time],
-    forecast
+    name,
+    weatherDescription,
+    temperature,
+    wind,
+    time,
+    list
   };
   console.log(weatherObj);
   generateHTML(weatherObj);
@@ -62,6 +82,10 @@ searchBtn.addEventListener("click", () => {
   searchByCity(citySearchInput.value);
 });
 
+// toggleForecast.addEventListener("click", () => {
+//   const forecastData = document.querySelector("div#forecast-data");
+// });
+
 currentLocationBtn.addEventListener("click", () => {
   if ("geolocation" in navigator) {
     searchBtn.disabled = true;
@@ -93,3 +117,26 @@ Handlebars.registerHelper("formatTime", timeStamp => {
   const formattedTime = `${hours}:${minutes.substr(-1)}:${seconds.substr(-2)}`;
   return formattedTime;
 });
+
+// const chunk = (arr, size) => {
+//   let chunked = [];
+//   let i = 0;
+//   while (i < arr.length) {
+//     chunked.push(arr.splice(i, i + size));
+//     i += size;
+//   }
+//   return chunked;
+// };
+
+const format = time => {
+  const date = new Date(time * 1000);
+  // Hours part from the timestamp
+  const hours = date.getHours();
+  // Minutes part from the timestamp
+  const minutes = `0${date.getMinutes()}`;
+  // Seconds part from the timestamp
+  const seconds = `0${date.getSeconds()}`;
+  // Will display time in 10:30:23 format
+  const formattedTime = `${hours}:${minutes.substr(-1)}:${seconds.substr(-2)}`;
+  return formattedTime;
+};
