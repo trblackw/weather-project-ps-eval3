@@ -20,6 +20,9 @@
       <div
         class="container justify-content-center p-5 mx-auto my-5 rounded drop-shadow bg-warning text-dark text-center"
       >
+        <small class="text-muted text-center d-inline-block mb-3"
+          >Country code set to "US" by default</small
+        >
         <div class="input-group mb-3">
           <input
             type="text"
@@ -32,9 +35,14 @@
             <button class="btn" type="button" id="search">Search</button>
           </div>
         </div>
-        <button class="btn btn-dark m-auto" id="current-location">
-          Your current location
-        </button>
+        <div class="d-flex justify-content-center m-auto p-3">
+          <button class="btn btn-dark btn-sm mx-1" id="current-location">
+            Your current location
+          </button>
+          <button class="btn btn-info btn-sm mx-1" id="change-country-code">
+            Change country
+          </button>
+        </div>
       </div>
       <div
         id="weather-data"
@@ -44,6 +52,9 @@
 
     <script id="weather-template" type="text/x-handlebars-template">
       <div id="main-weather-container">
+         <select id="country-codes">
+            <option value="" disabled></option>
+         </select>
          <h1 class="display-4 text-center">Displaying weather for <em>{{name}}</em></h1>
          <hr/>
          <div id="current-weather-header">
@@ -64,7 +75,7 @@
                {{#list}}
                <li>
       <div id="weather-forecast-data" class="shadow">
-            <small>{{formatTime dt}}</small>
+            <small>{{formatTime dt}} -- {{dt_txt}}</small>
             <ul id="weather-forecast-details">
                   <li><strong>Temperature: </strong> {{this.main.temp}}℉</li>
                   <li><strong>Pressure: </strong> {{this.main.pressure}}</li>

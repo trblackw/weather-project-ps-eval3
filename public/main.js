@@ -2,6 +2,25 @@ const API_KEY = "dc9c662a1bda3caf8b7c91b83968d8db";
 const searchBtn = document.querySelector("button#search");
 const citySearchInput = document.querySelector("input[aria-label=City");
 const currentLocationBtn = document.querySelector("#current-location");
+const changeCountryCodeBtn = document.querySelector(
+  "button#change-country-code"
+);
+
+const populateCountryCodes = () => {
+  fetch("/codes")
+    .then(codes => codes.json())
+    .then(codes => {
+      return codes.reduce((codeObj, code) => {
+        codeObj[code.name] = code.code;
+        return codeObj;
+      }, {});
+    })
+    .then(codes => console.log(codes))
+    .catch(err => console.error(err));
+};
+
+//currently triggering event listener for toggle forecast button??
+changeCountryCodeBtn.addEventListener("click", populateCountryCodes);
 
 const generateHTML = data => {
   const source = document.querySelector("#weather-template").innerHTML;
@@ -37,7 +56,6 @@ const searchByCity = async city => {
   const { name, id } = forecast.city;
 
   const [weatherDescription] = weather;
-  //   const formattedTimes = list.map(forecast => format(forecast.dt)).filter(time => String(time.split(":")[0]))
 
   const weatherObj = {
     name,
@@ -60,20 +78,20 @@ const searchCurrentLocation = async (lat, lon) => {
   ).then(responses => Promise.all(responses.map(res => res.json())));
 
   const [currentWeather, forecast] = weatherData;
-  const { weather, coord, main, wind, sys: time } = currentWeather;
+  const { weather, main: temperature, wind, sys: time } = currentWeather;
+  const { list } = forecast;
+  const { name, id } = forecast.city;
+
+  const [weatherDescription] = weather;
 
   const weatherObj = {
-    currentWeather: [
-      { city: forecast.city.name },
-      weather,
-      coord,
-      main,
-      wind,
-      time
-    ],
-    forecast
+    name,
+    weatherDescription,
+    temperature,
+    wind,
+    time,
+    list
   };
-  citySearchInput.value = forecast.city.name;
   console.log(weatherObj);
   generateHTML(weatherObj);
 };
@@ -81,10 +99,6 @@ const searchCurrentLocation = async (lat, lon) => {
 searchBtn.addEventListener("click", () => {
   searchByCity(citySearchInput.value);
 });
-
-// toggleForecast.addEventListener("click", () => {
-//   const forecastData = document.querySelector("div#forecast-data");
-// });
 
 currentLocationBtn.addEventListener("click", () => {
   if ("geolocation" in navigator) {
@@ -117,26 +131,3 @@ Handlebars.registerHelper("formatTime", timeStamp => {
   const formattedTime = `${hours}:${minutes.substr(-1)}:${seconds.substr(-2)}`;
   return formattedTime;
 });
-
-// const chunk = (arr, size) => {
-//   let chunked = [];
-//   let i = 0;
-//   while (i < arr.length) {
-//     chunked.push(arr.splice(i, i + size));
-//     i += size;
-//   }
-//   return chunked;
-// };
-
-const format = time => {
-  const date = new Date(time * 1000);
-  // Hours part from the timestamp
-  const hours = date.getHours();
-  // Minutes part from the timestamp
-  const minutes = `0${date.getMinutes()}`;
-  // Seconds part from the timestamp
-  const seconds = `0${date.getSeconds()}`;
-  // Will display time in 10:30:23 format
-  const formattedTime = `${hours}:${minutes.substr(-1)}:${seconds.substr(-2)}`;
-  return formattedTime;
-};

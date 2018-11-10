@@ -9,8 +9,6 @@ body {
   color: whitesmoke;
 }
 
-
-
 div#weather-data {
   margin: 1.5em auto;
   background: whitesmoke;
@@ -79,7 +77,6 @@ div#weather-forecast {
   display: none;
 }
 
-ul#weather-forcast-outer-ul,
 ul#weather-forecast-details {
   display: flex;
   flex-direction: row;
@@ -87,12 +84,17 @@ ul#weather-forecast-details {
   list-style: none;
 }
 
+ul#weather-forecast-details li {
+  margin: 1em;
+}
+
 div#weather-forecast-data {
   margin: 1.5em auto;
-  padding: 1em;
+  padding: 1.5em;
   background: hsl(0, 0%, 13%);
   color: whitesmoke;
   border-radius: 5px;
+  align-content: center;
 }
 
 .shadow {
