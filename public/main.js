@@ -1,6 +1,7 @@
 const API_KEY = "dc9c662a1bda3caf8b7c91b83968d8db";
 const searchBtn = document.querySelector("button#search");
 const citySearchInput = document.querySelector("input[aria-label=City");
+const countryCodeSelect = document.querySelector("select#country-code-select");
 const currentLocationBtn = document.querySelector("#current-location");
 const changeCountryCodeBtn = document.querySelector(
   "button#change-country-code"
@@ -9,20 +10,21 @@ const changeCountryCodeBtn = document.querySelector(
 const populateCountryCodes = () => {
   fetch("/codes")
     .then(codes => codes.json())
-    .then(codes => {
-      return codes.reduce((codeObj, code) => {
-        codeObj[code.name] = code.code;
-        return codeObj;
-      }, {});
-    })
-    .then(codes => console.log(codes))
-    .catch(err => console.error(err));
+    .then(codes => generateCountryCodeHTML({ codes }));
 };
 
-//currently triggering event listener for toggle forecast button??
 changeCountryCodeBtn.addEventListener("click", populateCountryCodes);
 
-const generateHTML = data => {
+const generateCountryCodeHTML = data => {
+  const source = document.querySelector("#country-code-template").innerHTML;
+  const template = Handlebars.compile(source);
+  const HTML = template(data);
+  const codeUI = document.querySelector("div#country-codes");
+  codeUI.style.display = "inherit";
+  codeUI.innerHTML = HTML;
+};
+
+const generateForecastHTML = data => {
   const source = document.querySelector("#weather-template").innerHTML;
   const template = Handlebars.compile(source);
   const HTML = template(data);
@@ -38,13 +40,13 @@ const generateHTML = data => {
   });
 };
 
-const searchByCity = async city => {
+const searchByCity = async (city, code = "us") => {
   if (citySearchInput.value === "") {
     alert("please enter a city");
     return;
   }
-  const currentWeatherURL = `https://api.openweathermap.org/data/2.5/weather?q=${city.toLowerCase()}&units=imperial&APPID=${API_KEY}`;
-  const forecastURL = `https://api.openweathermap.org/data/2.5/forecast?q=${city.toLowerCase()},us&units=imperial&APPID=${API_KEY}`;
+  const currentWeatherURL = `https://api.openweathermap.org/data/2.5/weather?q=${city.toLowerCase()},${code.toLowerCase()}&units=imperial&APPID=${API_KEY}`;
+  const forecastURL = `https://api.openweathermap.org/data/2.5/forecast?q=${city.toLowerCase()},${code.toLowerCase()}&units=imperial&APPID=${API_KEY}`;
 
   const weatherData = await Promise.all(
     [currentWeatherURL, forecastURL].map(url => fetch(url))
@@ -66,7 +68,7 @@ const searchByCity = async city => {
     list
   };
   console.log(weatherObj);
-  generateHTML(weatherObj);
+  generateForecastHTML(weatherObj);
 };
 
 const searchCurrentLocation = async (lat, lon) => {
@@ -93,10 +95,11 @@ const searchCurrentLocation = async (lat, lon) => {
     list
   };
   console.log(weatherObj);
-  generateHTML(weatherObj);
+  generateForecastHTML(weatherObj);
 };
 
 searchBtn.addEventListener("click", () => {
+  console.log();
   searchByCity(citySearchInput.value);
 });
 
