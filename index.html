@@ -43,6 +43,7 @@
             Change country
           </button>
         </div>
+        <div id="country-codes"></div>
       </div>
       <div
         id="weather-data"
@@ -52,9 +53,7 @@
 
     <script id="weather-template" type="text/x-handlebars-template">
       <div id="main-weather-container">
-         <select id="country-codes">
-            <option value="" disabled></option>
-         </select>
+
          <h1 class="display-4 text-center">Displaying weather for <em>{{name}}</em></h1>
          <hr/>
          <div id="current-weather-header">
@@ -89,6 +88,14 @@
 
          </div>
       </div>
+    </script>
+    <script id="country-code-template" type="text/x-handlebars-template">
+      <select id="country-code-select" class="w-50 m-auto">
+         <option value="US" selected>United States: US</option>
+         {{#each codes}}
+         <option value="{{code}}">{{name}}: {{code}}</option>
+         {{/each}}
+      </select>
     </script>
 
     <script src="handlebars.js"></script>
