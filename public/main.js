@@ -22,6 +22,12 @@ const generateCountryCodeHTML = data => {
   const codeUI = document.querySelector("div#country-codes");
   codeUI.style.display = "inherit";
   codeUI.innerHTML = HTML;
+  const countryCodeSelect = document.querySelector(
+    "select#country-code-select"
+  );
+  countryCodeSelect.addEventListener("change", () =>
+    searchByCity(citySearchInput.value, countryCodeSelect.value)
+  );
 };
 
 const generateForecastHTML = data => {
@@ -134,3 +140,7 @@ Handlebars.registerHelper("formatTime", timeStamp => {
   const formattedTime = `${hours}:${minutes.substr(-1)}:${seconds.substr(-2)}`;
   return formattedTime;
 });
+
+Handlebars.registerHelper('getCountryName', code => {
+   
+})
