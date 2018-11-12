@@ -141,6 +141,11 @@ Handlebars.registerHelper("formatTime", timeStamp => {
   return formattedTime;
 });
 
-Handlebars.registerHelper('getCountryName', code => {
-   
-})
+Handlebars.registerHelper("getCountryName", async code => {
+  const rawJSON = await fetch("/codes");
+  const country = await rawJSON
+    .json()
+    .then(countries => countries.find(country => country.code === code))
+    .then(country => country.name);
+  return country;
+});
