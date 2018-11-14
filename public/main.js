@@ -64,8 +64,12 @@ const searchByCity = async (city, code = "us") => {
 
     const [currentWeather, forecast] = weatherData;
     const { weather, main: temperature, wind, sys: time } = currentWeather;
-    const { list } = forecast;
+    let { list: forecastData } = forecast;
     const { name, id } = forecast.city;
+
+    const filteredForecastData = forecastData.filter(
+      data => Number(data.dt_txt.split(" ")[1].split(":")[0]) % 6 === 0
+    );
 
     const [weatherDescription] = weather;
 
@@ -75,7 +79,7 @@ const searchByCity = async (city, code = "us") => {
       temperature,
       wind,
       time,
-      list
+      filteredForecastData
     };
     console.log(weatherObj);
     generateForecastHTML(weatherObj);
@@ -144,6 +148,26 @@ Handlebars.registerHelper("formatTime", timeStamp => {
     formattedTime = `${hours}:${minutes.substr(-1)}:${seconds.substr(-2)}`;
   }
   return formattedTime;
+});
+
+Handlebars.registerHelper("formatDate", dateStamp => {
+  const time = dateStamp
+    .split(" ")[1]
+    .split(":")
+    .slice(0, 2)
+    .join(":");
+  const days = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday"
+  ];
+  const day = days[new Date(dateStamp).getDay()];
+  return `${day}, ${time}`;
 });
 
 Handlebars.registerHelper("getCountryName", async code => {
