@@ -7,6 +7,12 @@ const changeCountryCodeBtn = document.querySelector(
   "button#change-country-code"
 );
 
+const validateSearch = () => {
+  if (citySearchInput.value === "") {
+    return alert("please enter a city");
+  }
+};
+
 const populateCountryCodes = () => {
   fetch("/codes")
     .then(codes => codes.json())
@@ -19,9 +25,10 @@ const generateCountryCodeHTML = data => {
   const source = document.querySelector("#country-code-template").innerHTML;
   const template = Handlebars.compile(source);
   const HTML = template(data);
-  const codeUI = document.querySelector("div#country-codes");
-  codeUI.style.display = "inherit";
-  codeUI.innerHTML = HTML;
+  const selectContainer = document.querySelector("div#country-codes");
+  const selectCodeUI = document.querySelector("select#country-code-select");
+  selectContainer.style.display = "inherit";
+  selectCodeUI.innerHTML = HTML;
   const countryCodeSelect = document.querySelector(
     "select#country-code-select"
   );
@@ -47,34 +54,34 @@ const generateForecastHTML = data => {
 };
 
 const searchByCity = async (city, code = "us") => {
-  if (citySearchInput.value === "") {
-    alert("please enter a city");
-    return;
-  }
+  validateSearch();
   const currentWeatherURL = `https://api.openweathermap.org/data/2.5/weather?q=${city.toLowerCase()},${code.toLowerCase()}&units=imperial&APPID=${API_KEY}`;
   const forecastURL = `https://api.openweathermap.org/data/2.5/forecast?q=${city.toLowerCase()},${code.toLowerCase()}&units=imperial&APPID=${API_KEY}`;
+  try {
+    const weatherData = await Promise.all(
+      [currentWeatherURL, forecastURL].map(url => fetch(url))
+    ).then(responses => Promise.all(responses.map(res => res.json())));
 
-  const weatherData = await Promise.all(
-    [currentWeatherURL, forecastURL].map(url => fetch(url))
-  ).then(responses => Promise.all(responses.map(res => res.json())));
+    const [currentWeather, forecast] = weatherData;
+    const { weather, main: temperature, wind, sys: time } = currentWeather;
+    const { list } = forecast;
+    const { name, id } = forecast.city;
 
-  const [currentWeather, forecast] = weatherData;
-  const { weather, main: temperature, wind, sys: time } = currentWeather;
-  const { list } = forecast;
-  const { name, id } = forecast.city;
+    const [weatherDescription] = weather;
 
-  const [weatherDescription] = weather;
-
-  const weatherObj = {
-    name,
-    weatherDescription,
-    temperature,
-    wind,
-    time,
-    list
-  };
-  console.log(weatherObj);
-  generateForecastHTML(weatherObj);
+    const weatherObj = {
+      name,
+      weatherDescription,
+      temperature,
+      wind,
+      time,
+      list
+    };
+    console.log(weatherObj);
+    generateForecastHTML(weatherObj);
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 const searchCurrentLocation = async (lat, lon) => {
@@ -125,27 +132,23 @@ currentLocationBtn.addEventListener("click", () => {
   }
 });
 
-//timeformatter snagged (and modified) from Stack Overflow
-//https://stackoverflow.com/questions/847185/convert-a-unix-timestamp-to-time-in-javascript/847196#847196
-
 Handlebars.registerHelper("formatTime", timeStamp => {
   const date = new Date(timeStamp * 1000);
-  // Hours part from the timestamp
   const hours = date.getHours();
-  // Minutes part from the timestamp
   const minutes = `0${date.getMinutes()}`;
-  // Seconds part from the timestamp
   const seconds = `0${date.getSeconds()}`;
-  // Will display time in 10:30:23 format
-  const formattedTime = `${hours}:${minutes.substr(-1)}:${seconds.substr(-2)}`;
+  let formattedTime;
+  if (hours < 10) {
+    formattedTime = `0${hours}:${minutes.substr(-1)}:${seconds.substr(-2)}`;
+  } else {
+    formattedTime = `${hours}:${minutes.substr(-1)}:${seconds.substr(-2)}`;
+  }
   return formattedTime;
 });
 
 Handlebars.registerHelper("getCountryName", async code => {
   const rawJSON = await fetch("/codes");
-  const country = await rawJSON
-    .json()
-    .then(countries => countries.find(country => country.code === code))
-    .then(country => country.name);
-  return country;
+  const countryCodes = await rawJSON.json();
+  const country = countryCodes.find(country => country.code === code);
+  console.log(country.name);
 });
