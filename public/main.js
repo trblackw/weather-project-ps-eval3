@@ -16,7 +16,9 @@ const validateSearch = () => {
 const populateCountryCodes = () => {
   fetch("/codes")
     .then(codes => codes.json())
-    .then(codes => generateCountryCodeHTML({ codes }));
+     .then(codes => generateCountryCodeHTML({ codes }));
+   //prevent fetch from occurring more than once
+  changeCountryCodeBtn.removeEventListener("click", populateCountryCodes);
 };
 
 changeCountryCodeBtn.addEventListener("click", populateCountryCodes);
