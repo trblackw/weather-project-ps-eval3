@@ -21,7 +21,7 @@ const port = process.env.PORT || 5000;
 
 app.listen(port, () => {
   console.log(`app running on port ${port}`);
-  fs.readFile("../countries.json", "utf8", (err, data) => {
+  fs.readFile("./countries.json", "utf8", (err, data) => {
     if (err) throw err;
     countries = JSON.parse(data);
     console.log(

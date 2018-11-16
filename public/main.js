@@ -13,11 +13,12 @@ const validateSearch = () => {
   }
 };
 
+//fetch country codes from server and generate select dropdown options for each country
 const populateCountryCodes = () => {
   fetch("/codes")
     .then(codes => codes.json())
-     .then(codes => generateCountryCodeHTML({ codes }));
-   //prevent fetch from occurring more than once
+    .then(codes => generateCountryCodeHTML({ codes }));
+  //prevent fetch from occurring more than once
   changeCountryCodeBtn.removeEventListener("click", populateCountryCodes);
 };
 
@@ -49,8 +50,8 @@ const generateForecastHTML = data => {
   const toggleForecast = document.querySelector("button#toggle-forecast");
   toggleForecast.addEventListener("click", () => {
     const forecastData = document.querySelector("div#weather-forecast");
-    return !forecastData.style.display
-      ? (forecastData.style.display = "inherit")
+    return forecastData.style.display === "none"
+      ? (forecastData.style.display = "flex")
       : (forecastData.style.display = "none");
   });
 };
@@ -70,7 +71,7 @@ const searchByCity = async (city, code = "us") => {
     const { name, id } = forecast.city;
 
     const filteredForecastData = forecastData.filter(
-      data => Number(data.dt_txt.split(" ")[1].split(":")[0]) % 6 === 0
+      data => Number(data.dt_txt.split(" ")[1].split(":")[0]) % 24 === 0
     );
 
     const [weatherDescription] = weather;
@@ -158,16 +159,7 @@ Handlebars.registerHelper("formatDate", dateStamp => {
     .split(":")
     .slice(0, 2)
     .join(":");
-  const days = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-    "Sunday"
-  ];
+  const days = ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat", "Sun"];
   const day = days[new Date(dateStamp).getDay()];
   return `${day}, ${time}`;
 });
