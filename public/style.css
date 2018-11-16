@@ -12,21 +12,29 @@ body {
 div#weather-data {
   margin: 1.5em auto;
   background: whitesmoke;
-  padding: 1.5em;
   display: none;
   color: black;
   border-radius: 5px;
+  justify-content: center;
+  align-content: center;
 }
 
 div#current-weather-header {
-  margin: 1em auto;
+  margin: 0 auto;
   text-align: center;
-  align-content: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
 
 div#current-weather-header p {
   display: block;
   font-size: 2em;
+}
+div#current-weather-header img {
+  object-fit: contain;
+  height: 200px;
+  width: auto;
 }
 
 ul#current-weather-details {
@@ -67,30 +75,45 @@ button#search:hover {
 }
 
 div#weather-forecast {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
   display: none;
+  max-height: 300px;
+  padding: 1em;
 }
 
-ul#weather-forecast-details {
+div#weather-forecast img {
+  object-fit: contain;
+  height: 200px;
+  width: auto;
+  margin: 0 auto;
+}
+
+/* div#weather-forecast-details {
   display: flex;
+  flex-wrap: wrap;
   flex-direction: row;
   justify-content: center;
   list-style: none;
+  margin: 0.8em;
 }
 
-ul#weather-forecast-details li {
-  margin: 1em;
-}
+div#weather-forecast-details p {
+  margin: 0.7em;
+  display: inline-block;
+} */
 
 div#weather-forecast-data {
-  margin: 1.5em auto;
+  /* margin: 1.5em auto;
   padding: 1.5em;
   background: hsl(0, 0%, 13%);
   color: whitesmoke;
   border-radius: 5px;
-  align-content: center;
+  border: 2px solid slateblue;
+  height: 100px;
+  width: 200px; */
+}
+
+ul#weather-forecast-ul {
+  font-size: 0.8em;
 }
 
 div#country-codes {
