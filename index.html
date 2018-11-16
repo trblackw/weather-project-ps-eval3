@@ -15,11 +15,11 @@
     <title>Document</title>
   </head>
   <body>
-    <div class="container-fluid">
-      <h3 class="display-4 text-center mt-3">Weather Bug</h3>
+    <div class="container m-auto border border-danger row">
       <div
-        class="container justify-content-center p-5 mx-auto my-5 rounded drop-shadow bg-warning text-dark text-center"
+        class="container justify-content-center p-4 mx-auto my-2 rounded drop-shadow bg-warning text-dark text-center col-sm-9 col-md-8 col-lg-7"
       >
+        <h3 class="display-4 text-center mt-3">Weather Bug</h3>
         <small class="text-muted text-center d-inline-block mb-3"
           >Country code set to "US" by default</small
         >
@@ -43,7 +43,9 @@
             Change country
           </button>
         </div>
-        <div id="country-codes"></div>
+        <div id="country-codes">
+          <select id="country-code-select" class="w-50 m-auto"></select>
+        </div>
       </div>
       <div
         id="weather-data"
@@ -52,9 +54,9 @@
     </div>
 
     <script id="weather-template" type="text/x-handlebars-template">
-      <div id="main-weather-container">
+      <div id="main-weather-container" class="border border-danger">
 
-         <h1 class="display-4 text-center">Displaying weather for <em>{{name}}</em></h1>
+         <h3 class="display-4 text-center">Displaying weather for <strong>{{name}}, {{time.country}}</strong></h3>
          <hr/>
          <div id="current-weather-header">
                   <img src="http://openweathermap.org/img/w/{{weatherDescription.icon}}.png" alt="icon" id="weather-icon">
@@ -64,17 +66,17 @@
             <li><strong>Temperature: </strong> {{temperature.temp}}℉</li>
             <li><strong>Pressure: </strong> {{temperature.pressure}}</li>
             <li><strong>Humidity: </strong>{{temperature.humidity}}%</li>
-            <li><strong>Wind Speed: </strong>{{wind.speed}} mph (Gusts up to {{wind.gust}} mph)</li>
+            <li><strong>Wind Speed: </strong>{{wind.speed}} mph</li>
             <li><strong>Sunrise: </strong>{{formatTime time.sunrise}} am</li>
             <li><strong>Sunset: </strong>{{formatTime time.sunset}} pm</li>
          </ul>
          <button class="btn btn-lg btn-info btn-block" id="toggle-forecast">See 5 day forecast</button>
          <div id="weather-forecast">
             <ul id="weather-forecast-outer-ul">
-               {{#list}}
+               {{#filteredForecastData}}
                <li>
       <div id="weather-forecast-data" class="shadow">
-            <small>{{formatTime dt}} -- {{dt_txt}}</small>
+            <small class="lead">{{formatDate dt_txt}}</small>
             <ul id="weather-forecast-details">
                   <li><strong>Temperature: </strong> {{this.main.temp}}℉</li>
                   <li><strong>Pressure: </strong> {{this.main.pressure}}</li>
@@ -83,19 +85,17 @@
             </ul>
       </div>
                </li>
-            {{/list}}
+            {{/filteredForecastData}}
             </ul>
 
          </div>
       </div>
     </script>
     <script id="country-code-template" type="text/x-handlebars-template">
-      <select id="country-code-select" class="w-50 m-auto">
-         <option value="US" selected>United States: US</option>
-         {{#each codes}}
-         <option value="{{code}}">{{name}}: {{code}}</option>
-         {{/each}}
-      </select>
+      <option value="US" selected>United States: US</option>
+      {{#each codes}}
+      <option value="{{code}}">{{name}}: {{code}}</option>
+      {{/each}}
     </script>
 
     <script src="handlebars.js"></script>
