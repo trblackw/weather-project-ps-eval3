@@ -15,7 +15,7 @@
     <title>Document</title>
   </head>
   <body>
-    <div class="container m-auto border border-danger row">
+    <div class="container m-auto shadow row">
       <div
         class="container justify-content-center p-4 mx-auto my-2 rounded drop-shadow bg-warning text-dark text-center col-sm-9 col-md-8 col-lg-7"
       >
@@ -54,7 +54,7 @@
     </div>
 
     <script id="weather-template" type="text/x-handlebars-template">
-      <div id="main-weather-container" class="border border-danger">
+      <div id="main-weather-container" class="shadow p-3">
 
          <h3 class="display-4 text-center">Displaying weather for <strong>{{name}}, {{time.country}}</strong></h3>
          <hr/>
@@ -71,22 +71,23 @@
             <li><strong>Sunset: </strong>{{formatTime time.sunset}} pm</li>
          </ul>
          <button class="btn btn-lg btn-info btn-block" id="toggle-forecast">See 5 day forecast</button>
-         <div id="weather-forecast">
-            <ul id="weather-forecast-outer-ul">
+         <div id="weather-forecast" class="container-fluid p-3 m-auto">
+            <div class="card-group">
                {{#filteredForecastData}}
-               <li>
-      <div id="weather-forecast-data" class="shadow">
-            <small class="lead">{{formatDate dt_txt}}</small>
-            <ul id="weather-forecast-details">
-                  <li><strong>Temperature: </strong> {{this.main.temp}}℉</li>
-                  <li><strong>Pressure: </strong> {{this.main.pressure}}</li>
-                  <li><strong>Humidity: </strong>{{this.main.humidity}}%</li>
-                  <li><strong>Wind Speed: </strong>{{this.wind.speed}} mph</li>
-            </ul>
-      </div>
-               </li>
-            {{/filteredForecastData}}
-            </ul>
+               <div class="card">
+                     <img class="card-img-top" src="http://openweathermap.org/img/w/{{weather.[0].icon}}.png" alt="Card image cap" />
+                     <div class="card-body">
+                       <h5 class="card-title">{{formatDate dt_txt}}</h5>
+                       <ul class="card-text" id="weather-forecast-ul">
+                           <li><strong>Temperature: </strong> {{this.main.temp}}℉</li>
+                           <li><strong>Pressure: </strong> {{this.main.pressure}}</li>
+                           <li><strong>Humidity: </strong>{{this.main.humidity}}%</li>
+                           <li><strong>Wind Speed: </strong>{{this.wind.speed}} mph</li>
+                     </ul>
+                   </div>
+            </div>
+
+               {{/filteredForecastData}}
 
          </div>
       </div>
@@ -102,3 +103,21 @@
     <script src="main.js"></script>
   </body>
 </html>
+
+<!--
+  <ul id="weather-forecast-outer-ul">
+        {{#filteredForecastData}}
+        <li>
+  <div id="weather-forecast-data" class="shadow card">
+     <small class="lead">{{formatDate dt_txt}}</small>
+     <div id="weather-forecast-details" class="card-body">
+           <p><strong>Temperature: </strong> {{this.main.temp}}℉</p>
+           <p><strong>Pressure: </strong> {{this.main.pressure}}</p>
+           <p><strong>Humidity: </strong>{{this.main.humidity}}%</p>
+           <p><strong>Wind Speed: </strong>{{this.wind.speed}} mph</p>
+     </div>
+  </div>
+        </li>
+     {{/filteredForecastData}}
+     </ul>
+-->
